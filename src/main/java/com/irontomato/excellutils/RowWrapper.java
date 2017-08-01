@@ -27,7 +27,7 @@ public class RowWrapper {
     }
 
     public static RowWrapper wrap(Row row, CellStyle style) {
-        return new RowWrapper(row, row.getLastCellNum(), style);
+        return new RowWrapper(row, 0, style);
     }
 
     public int getColCursor() {
@@ -42,7 +42,15 @@ public class RowWrapper {
         this.defaultStyle = defaultStyle;
     }
 
-    public Cell addCell(String value, CellStyle style){
+    public CellStyle getDefaultStyle() {
+        return defaultStyle;
+    }
+
+    public Row getRow() {
+        return row;
+    }
+
+    public Cell addCell(String value, CellStyle style) {
         Cell cell = row.createCell(colCursor++);
         if (value != null) {
             cell.setCellValue(value);
@@ -70,6 +78,17 @@ public class RowWrapper {
             cells[i] = addCell(values[i]);
         }
         return cells;
+    }
+
+    public Cell[] addCells(Object... values) {
+        if (values == null || values.length == 0) {
+            throw new IllegalArgumentException("values should not empty");
+        }
+        String[] strValues = new String[values.length];
+        for (int i = 0; i < values.length; i++) {
+            strValues[i] = values[i] == null ? null : String.valueOf(values[i]);
+        }
+        return addCells(strValues);
     }
 
 }
